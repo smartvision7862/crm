@@ -2329,19 +2329,41 @@
                             </div>
                         </div>
 
-                        <!-- Backend API Server Link card -->
+                        <!-- Backend API Server Link + Tunnel Launcher card -->
                         <div class="glass-panel integration-card" style="padding:20px; border-radius:var(--radius-lg); display:flex; gap:16px;">
                             <div class="integration-icon" style="font-size:32px;">🖥️</div>
                             <div class="integration-details" style="flex:1; display:flex; flex-direction:column; gap:12px;">
-                                <div class="integration-title" style="font-weight:700; font-size:14px; color:#fff;">CRM Backend Server Link</div>
-                                <div class="integration-desc" style="font-size:11px; color:var(--text-muted); line-height:1.4;">Configure your backend Node.js API server URL. Use localhost for local runs, or enter a remote server IP/domain.</div>
-                                
-                                <div class="form-group">
-                                    <label>Backend API URL</label>
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div class="integration-title" style="font-weight:700; font-size:14px; color:#fff;">CRM Backend Server & Tunnel</div>
+                                    <span id="tunnel-status-badge" style="font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">⚫ Offline</span>
+                                </div>
+                                <div class="integration-desc" style="font-size:11px; color:var(--text-muted); line-height:1.4;">Launch your local Node.js backend and open a public HTTPS tunnel so the online site works from anywhere. The public URL is auto-saved to GitHub.</div>
+
+                                <!-- Public URL display -->
+                                <div id="tunnel-url-row" style="display:none; background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2); border-radius:var(--radius-md); padding:10px 14px;">
+                                    <div style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">PUBLIC URL (online site connected to)</div>
+                                    <a id="tunnel-url-link" href="#" target="_blank" style="font-size:12px; color:#a78bfa; font-weight:600; word-break:break-all;"></a>
+                                </div>
+
+                                <!-- Launch button -->
+                                <button id="btn-launch-tunnel" class="btn btn-primary" onclick="launchServerTunnel()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); font-size:13px; padding:10px 20px; letter-spacing:0.5px; display:flex; align-items:center; gap:8px; justify-content:center;">
+                                    <span id="btn-launch-icon">🚀</span>
+                                    <span id="btn-launch-text">Launch Server Online</span>
+                                </button>
+
+                                <!-- Stop button -->
+                                <button id="btn-stop-tunnel" class="btn btn-secondary" onclick="stopServerTunnel()" style="display:none; font-size:12px;">
+                                    ⏹ Stop Tunnel
+                                </button>
+
+                                <hr style="border:none; border-top:1px solid var(--border-color); margin:4px 0;">
+
+                                <!-- Manual URL override -->
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:11px; color:var(--text-muted);">Custom Backend URL (optional override)</label>
                                     <input type="text" class="form-control" id="settings-backend-url" placeholder="http://localhost:3000" style="font-size:12px;">
                                 </div>
-                                
-                                <button class="btn btn-primary" onclick="saveBackendSettings()">Save Backend URL</button>
+                                <button class="btn btn-secondary" onclick="saveBackendSettings()" style="font-size:12px;">Save Custom URL</button>
                             </div>
                         </div>
                     </div>

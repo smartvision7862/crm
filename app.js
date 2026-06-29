@@ -5359,6 +5359,8 @@ function renderRetentionAnalytics() {
 }
 
 function switchSettingsTab(tabId) {
+    // Auto-refresh tunnel status when integrations tab is opened
+    if (tabId === 'integrations' || tabId === undefined) pollTunnelStatus();
     const integrationsBtn = document.getElementById("btn-settings-tab-integrations");
     const businessBtn = document.getElementById("btn-settings-tab-business");
     const commsBtn = document.getElementById("btn-settings-tab-comms");
@@ -5541,6 +5543,90 @@ function saveBackendSettings() {
             webhookInp.value = defaultWebhook;
         }
     }
+}
+
+// ─── TUNNEL CONTROL ──────────────────────────────────────────────────────────
+let _tunnelPollInterval = null;
+
+function updateTunnelUI(running, url) {
+    const badge    = document.getElementById('tunnel-status-badge');
+    const urlRow   = document.getElementById('tunnel-url-row');
+    const urlLink  = document.getElementById('tunnel-url-link');
+    const launchBtn = document.getElementById('btn-launch-tunnel');
+    const stopBtn  = document.getElementById('btn-stop-tunnel');
+    const launchIcon = document.getElementById('btn-launch-icon');
+    const launchText = document.getElementById('btn-launch-text');
+    if (!badge) return;
+    if (running && url) {
+        badge.style.cssText = 'font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3);';
+        badge.textContent = '🟢 Online';
+        if (urlRow) urlRow.style.display = 'block';
+        if (urlLink) { urlLink.textContent = url; urlLink.href = url; }
+        if (launchBtn) launchBtn.style.display = 'none';
+        if (stopBtn) stopBtn.style.display = 'block';
+    } else if (running && !url) {
+        badge.style.cssText = 'font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3);';
+        badge.textContent = '🟡 Starting...';
+        if (launchIcon) launchIcon.textContent = '⏳';
+        if (launchText) launchText.textContent = 'Opening tunnel...';
+    } else {
+        badge.style.cssText = 'font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);';
+        badge.textContent = '⚫ Offline';
+        if (urlRow) urlRow.style.display = 'none';
+        if (launchBtn) { launchBtn.style.display = 'flex'; launchBtn.disabled = false; }
+        if (stopBtn) stopBtn.style.display = 'none';
+        if (launchIcon) launchIcon.textContent = '🚀';
+        if (launchText) launchText.textContent = 'Launch Server Online';
+    }
+}
+
+async function pollTunnelStatus() {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/tunnel-status`);
+        if (!res.ok) throw new Error('offline');
+        const data = await res.json();
+        updateTunnelUI(data.running, data.url);
+        return data;
+    } catch { updateTunnelUI(false, null); return { running: false, url: null }; }
+}
+
+async function launchServerTunnel() {
+    const launchBtn  = document.getElementById('btn-launch-tunnel');
+    const launchIcon = document.getElementById('btn-launch-icon');
+    const launchText = document.getElementById('btn-launch-text');
+    if (launchBtn) launchBtn.disabled = true;
+    if (launchIcon) launchIcon.textContent = '⏳';
+    if (launchText) launchText.textContent = 'Starting tunnel...';
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/start-tunnel`, { method: 'POST' });
+        if (!res.ok) throw new Error('Server did not respond');
+        updateTunnelUI(true, null);
+        if (_tunnelPollInterval) clearInterval(_tunnelPollInterval);
+        let attempts = 0;
+        _tunnelPollInterval = setInterval(async () => {
+            attempts++;
+            const data = await pollTunnelStatus();
+            if (data.url || attempts > 15) {
+                clearInterval(_tunnelPollInterval);
+                _tunnelPollInterval = null;
+                if (launchBtn) launchBtn.disabled = false;
+                if (data.url) logActivity('Tunnel Launched', `Public URL live: ${data.url}`, 'success');
+            }
+        }, 2000);
+    } catch (err) {
+        if (launchBtn) launchBtn.disabled = false;
+        if (launchIcon) launchIcon.textContent = '🚀';
+        if (launchText) launchText.textContent = 'Launch Server Online';
+        alert('❌ Could not start tunnel.\nMake sure the server (node server.js) is running first.\n\nError: ' + err.message);
+    }
+}
+
+async function stopServerTunnel() {
+    try {
+        await fetch(`${BACKEND_URL}/api/stop-tunnel`, { method: 'POST' });
+        updateTunnelUI(false, null);
+        logActivity('Tunnel Stopped', 'Public tunnel disconnected.', 'info');
+    } catch (err) { alert('Could not stop tunnel: ' + err.message); }
 }
 
 function saveMetaAPIConnection() {

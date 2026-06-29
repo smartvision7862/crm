@@ -1,4 +1,5 @@
 import makeWASocket, { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } from '@whiskeysockets/baileys';
+import { spawn, execSync } from 'child_process';
 import pino from 'pino';
 import express from 'express';
 import cors from 'cors';
@@ -548,6 +549,91 @@ app.post('/api/excel/save', (req, res) => {
             return res.status(500).json({ error: 'The crm.xls file is currently open in Microsoft Excel. Please close it in Excel first to save changes.' });
         }
         res.status(500).json({ error: 'Failed to write Excel file: ' + err.message });
+    }
+});
+
+
+// ─── TUNNEL MANAGEMENT ─────────────────────────────────────────────────────────
+let tunnelProcess = null;
+let tunnelUrl = null;
+
+app.get('/api/tunnel-status', (req, res) => {
+    res.json({
+        running: tunnelProcess !== null && !tunnelProcess.killed,
+        url: tunnelUrl || null
+    });
+});
+
+app.post('/api/start-tunnel', async (req, res) => {
+    // Kill existing tunnel if running
+    if (tunnelProcess && !tunnelProcess.killed) {
+        tunnelProcess.kill();
+        tunnelProcess = null;
+        tunnelUrl = null;
+    }
+
+    console.log('[Tunnel] Starting localtunnel...');
+    res.json({ success: true, message: 'Tunnel starting... check /api/tunnel-status in a few seconds.' });
+
+    // Start tunnel as background process
+    const tunnel = spawn('npx', ['localtunnel', '--port', '3000', '--subdomain', 'smartvision-crm'], {
+        cwd: __dirname,
+        shell: true,
+        stdio: ['ignore', 'pipe', 'pipe']
+    });
+    tunnelProcess = tunnel;
+
+    tunnel.stdout.on('data', (data) => {
+        const line = data.toString();
+        console.log('[Tunnel]', line.trim());
+        const match = line.match(/your url is: (.+)/);
+        if (match) {
+            tunnelUrl = match[1].trim();
+            console.log('[Tunnel] Public URL:', tunnelUrl);
+
+            // Update config.json with the new URL
+            const configPath = path.join(__dirname, 'config.json');
+            try {
+                fs.writeFileSync(configPath, JSON.stringify({ backendUrl: tunnelUrl }, null, 2));
+                console.log('[Tunnel] config.json updated with:', tunnelUrl);
+
+                // Push to GitHub
+                try {
+                    execSync('git add config.json', { cwd: __dirname });
+                    execSync(`git commit -m "chore: Update live tunnel URL to ${tunnelUrl}"`, { cwd: __dirname });
+                    execSync('git push origin main', { cwd: __dirname });
+                    console.log('[Tunnel] config.json pushed to GitHub Pages.');
+                } catch (gitErr) {
+                    console.warn('[Tunnel] Git push failed (non-fatal):', gitErr.message);
+                }
+            } catch (fileErr) {
+                console.error('[Tunnel] Failed to write config.json:', fileErr.message);
+            }
+        }
+    });
+
+    tunnel.stderr.on('data', (data) => {
+        const line = data.toString();
+        if (!line.includes('npm warn')) console.log('[Tunnel stderr]', line.trim());
+    });
+
+    tunnel.on('close', (code) => {
+        console.log('[Tunnel] Process exited with code', code);
+        if (tunnelProcess === tunnel) {
+            tunnelProcess = null;
+            tunnelUrl = null;
+        }
+    });
+});
+
+app.post('/api/stop-tunnel', (req, res) => {
+    if (tunnelProcess && !tunnelProcess.killed) {
+        tunnelProcess.kill();
+        tunnelProcess = null;
+        tunnelUrl = null;
+        res.json({ success: true, message: 'Tunnel stopped.' });
+    } else {
+        res.json({ success: false, message: 'No tunnel running.' });
     }
 });
 
