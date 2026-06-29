@@ -493,134 +493,160 @@ function calculateAISuggestionForChat(chatId, text) {
                         textLower.includes("leak") || textLower.includes("broken") || 
                         textLower.includes("defect") || textLower.includes("fail");
                         
-    if (isComplaint) {
-        responseSuggestion = `Dear ${customer.name}, we apologize for the trouble. I have registered your complaint in our CRM and escalated it to our administrator, Imtiyaz Ahmed. Our team will contact you in 5 minutes.`;
-        score = 95;
-        temp = "Hot";
-        
-        // Auto-escalate in CRM
-        const logText = "ESCALATED: Customer registered a complaint via WhatsApp. Supervisor notified.";
-        const isAlreadyLogged = customer.history.some(h => h.text && h.text.includes("ESCALATED"));
-        if (!isAlreadyLogged) {
-            customer.history.push({ type: "system", text: logText, time: new Date().toLocaleString() });
-            logActivity(`Urgent Ticket Created: ${customer.name}`, `Escalated to Imtiyaz Ahmed`, 'danger');
+    const isArabic = /[\u0600-\u06FF]/.test(textLower);
+
+    if (isArabic) {
+        if (textLower.includes("مرحبا") || textLower.includes("سلام") || textLower.includes("أهلاً") || textLower.includes("اهلان") || textLower.includes("مساء") || textLower.includes("صباح") || textLower.includes("مرحب")) {
+            responseSuggestion = `أهلاً بك يا ${customer.name}! شكراً لتواصلك مع شركة سمارت فيجن (Smart Vision). كيف يمكننا مساعدتك اليوم؟`;
+        } else if (textLower.includes("سعر") || textLower.includes("بكم") || textLower.includes("كم") || textLower.includes("تكلفة") || textLower.includes("فلوس") || textLower.includes("عرض")) {
+            responseSuggestion = `مرحباً يا ${customer.name}. يسعدنا تزويدك بالأسعار وتفاصيل التكلفة. هل يمكنك إخبارنا بالخدمة أو النظام الذي ترغب في الاستفسار عنه لتزويدك بعرض سعر مناسب؟`;
+            score = 88;
+            temp = "Hot";
+        } else if (textLower.includes("موقع") || textLower.includes("عنوان") || textLower.includes("وين") || textLower.includes("الدوحة") || textLower.includes("لوسيل")) {
+            responseSuggestion = `أهلاً يا ${customer.name}. مقر شركتنا يقع في الدوحة، قطر. يسعدنا تقديم خدماتنا في جميع أنحاء الدولة. هل ترغب في جدولة زيارة لموقعك لمعاينته؟`;
+            score = 70;
+            temp = "Warm";
+        } else if (textLower.includes("موعد") || textLower.includes("حجز") || textLower.includes("زيارة") || textLower.includes("معاينة") || textLower.includes("فحص") || textLower.includes("مهندس") || textLower.includes("فني")) {
+            responseSuggestion = `مرحباً يا ${customer.name}. يمكننا ترتيب موعد لزيارة ومعاينة الموقع من قبل فريقنا الفني. هل تفضل موعداً غداً في الصباح أم المساء؟`;
+            score = 90;
+            temp = "Hot";
+        } else if (textLower.includes("شكرا") || textLower.includes("تسلم") || textLower.includes("يعطيك")) {
+            responseSuggestion = `على الرحب والسعة يا ${customer.name}! نحن في خدمتكم دائماً.`;
+            score = 80;
+            temp = "Warm";
+        } else {
+            responseSuggestion = `شكراً لرسالتك يا ${customer.name}. تم تسجيل استفسارك وسيقوم أحد موظفينا بالرد عليك في أقرب وقت ممكن.`;
+        }
+    } else {
+        if (isComplaint) {
+            responseSuggestion = `Dear ${customer.name}, we apologize for the trouble. I have registered your complaint in our CRM and escalated it to our administrator, Imtiyaz Ahmed. Our team will contact you in 5 minutes.`;
+            score = 95;
+            temp = "Hot";
             
-            // Add task to task table
-            const tbody = document.querySelector("#op-tab-tasks tbody");
-            if (tbody) {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td style="font-weight: 700;">URGENT TICKET: WhatsApp Complaint from ${customer.name}</td>
-                    <td>Imtiyaz Ahmed</td>
-                    <td>Today</td>
-                    <td><span class="badge-status danger">Critical</span></td>
-                    <td><span class="badge-status danger">Needs Review</span></td>
-                `;
-                tbody.insertBefore(tr, tbody.firstChild);
+            // Auto-escalate in CRM
+            const logText = "ESCALATED: Customer registered a complaint via WhatsApp. Supervisor notified.";
+            const isAlreadyLogged = customer.history.some(h => h.text && h.text.includes("ESCALATED"));
+            if (!isAlreadyLogged) {
+                customer.history.push({ type: "system", text: logText, time: new Date().toLocaleString() });
+                logActivity(`Urgent Ticket Created: ${customer.name}`, `Escalated to Imtiyaz Ahmed`, 'danger');
+                
+                // Add task to task table
+                const tbody = document.querySelector("#op-tab-tasks tbody");
+                if (tbody) {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td style="font-weight: 700;">URGENT TICKET: WhatsApp Complaint from ${customer.name}</td>
+                        <td>Imtiyaz Ahmed</td>
+                        <td>Today</td>
+                        <td><span class="badge-status danger">Critical</span></td>
+                        <td><span class="badge-status danger">Needs Review</span></td>
+                    `;
+                    tbody.insertBefore(tr, tbody.firstChild);
+                }
             }
         }
-    }
-    // 2. Booking request detection
-    else if (textLower.includes("schedule") || textLower.includes("tomorrow") || textLower.includes("book") || textLower.includes("visit") || textLower.includes("inspection")) {
-        responseSuggestion = `Absolutely, ${customer.name}. I've logged your request for a survey. I can book our service team for tomorrow at 10:00 AM. Does that work for you?`;
-        score = 90;
-        temp = "Hot";
-    }
-    // 3. Price enquiry detection (Lead Qualification)
-    else if (textLower.includes("price") || textLower.includes("cost") || textLower.includes("quote") || textLower.includes("how much")) {
-        responseSuggestion = `Hi ${customer.name}! We'd be happy to prepare a quote for you. What services are you looking for, and where is your property located?`;
-        score = 88;
-        temp = "Hot";
-    }
-    // 3.5 CCTV / Security camera enquiry detection
-    else if (textLower.includes("cctv") || textLower.includes("camera") || textLower.includes("security")) {
-        responseSuggestion = `Hi ${customer.name}! Smart Vision supplies and installs premium IP & Analog CCTV camera systems (Dome, Bullet, PTZ) from certified brands like Hikvision, Dahua, and Honeywell, fully compliant with Qatar MOI-SSD regulations. How many cameras do you require, and is it for a commercial or residential property?`;
-        score = 85;
-        temp = "Warm";
-    }
-    // 3.7 MEP / HVAC / Maintenance Services enquiry detection
-    else if (textLower.includes("mep") || textLower.includes("hvac") || textLower.includes("service") || textLower.includes("maintenance") || textLower.includes("ac repair")) {
-        responseSuggestion = `Hi ${customer.name}! Smart Vision offers full MEP services, including Central/Split AC repairs, preventative HVAC maintenance, electrical installations, plumbing, and fire safety systems in Qatar. Are you interested in a commercial MEP contract or a one-time residential service?`;
-        score = 92;
-        temp = "Hot";
-    }
-    // 3.8 Fire Alarm & Fire Fighting enquiry detection
-    else if (textLower.includes("fire") || textLower.includes("alarm") || textLower.includes("smoke") || textLower.includes("sprinkler") || textLower.includes("suppression") || textLower.includes("civil defence") || textLower.includes("qcd")) {
-        responseSuggestion = `Hi ${customer.name}! Smart Vision is a QCD Grade A Certified contractor in Qatar. We design, install, and maintain Civil Defence-approved Fire Alarm and Fire Fighting/Suppression systems. Do you need testing, maintenance, or QCD approvals for your facility?`;
-        score = 94;
-        temp = "Hot";
-    }
-    // 3.9 Access Control & Biometrics enquiry detection
-    else if (textLower.includes("access") || textLower.includes("biometric") || textLower.includes("door lock") || textLower.includes("gate") || textLower.includes("turnstile") || textLower.includes("fingerprint")) {
-        responseSuggestion = `Hi ${customer.name}! Smart Vision offers advanced Access Control and Biometric security systems (card readers, facial recognition, turnstiles) for offices and industrial sites in Doha. What is the scope of your access control requirement?`;
-        score = 86;
-        temp = "Warm";
-    }
-    // 3.95 ELV, IT Cabling & Public Address (PA) enquiry detection
-    else if (textLower.includes("network") || textLower.includes("cabling") || textLower.includes("cisco") || textLower.includes("wifi") || textLower.includes("public address") || textLower.includes("speaker") || textLower.includes("sound") || textLower.includes("audio")) {
-        responseSuggestion = `Hi ${customer.name}! We specialize in ELV systems integration, including Structured Fiber/Cat6 Cabling, Cisco IT networks, and IP-based Public Address & Voice Evacuation audio arrays. Are you looking to set up an IT network or audio infrastructure?`;
-        score = 85;
-        temp = "Warm";
-    }
-    // 3.97 Building Automation, BMS & KNX/DALI lighting
-    else if (textLower.includes("bms") || textLower.includes("automation") || textLower.includes("knx") || textLower.includes("smart home") || textLower.includes("lighting control") || textLower.includes("dali")) {
-        responseSuggestion = `Hi ${customer.name}! We design and integrate Intelligent Building Management Systems (BMS), KNX lighting controls, DALI smart dimming, and energy management solutions to optimize your facility's operations. What project automation scope are you planning?`;
-        score = 88;
-        temp = "Warm";
-    }
-    // 3.98 SMART VISION - Restaurant Monitoring AI System detection
-    else if (textLower.includes("restaurant monitoring") || (textLower.includes("restaurant") && textLower.includes("monitoring"))) {
-        responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Restaurant Monitoring AI System uses intelligent cameras to track table occupancy in real time, speed up seating management, and analyze service flow and dining patterns to optimize staff allocation. Would you like to schedule a demo of our restaurant analytics system?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.985 SMART VISION - Crowd Detection
-    else if (textLower.includes("crowd detection") || textLower.includes("crowd monitoring") || textLower.includes("crowd count") || textLower.includes("crowd")) {
-        responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Crowd Detection AI system utilizes advanced density mapping and object detection algorithms to count and monitor dense groups of people in real-time, perfect for malls, events, and public safety management. Would you like a product overview sheet or a live demo?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.987 SMART VISION - Staff Movement AI System detection
-    else if (textLower.includes("staff movement") || textLower.includes("employee tracking") || textLower.includes("employee movement")) {
-        responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Staff Movement AI System uses intelligent video analytics to track employee presence, movement patterns, and activity flow across zones. It optimizes workforce efficiency, prevents idle time, and ensures duty compliance with real-time insights and automated alerts. Would you like a quote or a demo of our workforce tracking dashboard?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.988 SMART VISION - Unauthorized Intrusion Detection
-    else if (textLower.includes("intrusion") || textLower.includes("unauthorized intrusion") || textLower.includes("perimeter security")) {
-        responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Unauthorized Intrusion Detection system uses AI-driven video analytics to identify abnormal movements, forced entry attempts, and suspicious behavior around residential or private properties in real-time, ensuring early warning of security breaches. Would you like to schedule a survey for a perimeter monitoring setup?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.989 SMART VISION - Bar Monitoring System
-    else if (textLower.includes("bar monitoring") || textLower.includes("bar tracking") || (textLower.includes("bar") && textLower.includes("monitoring"))) {
-        responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Bar Monitoring System uses AI-powered video analytics to track real-time pouring activity, detect over-pouring and wastage, verify staff compliance, and prevent inventory shrinkage. Would you like to schedule a demo of our bar automation system?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.991 SMART TRUEVOLUME
-    else if (textLower.includes("truevolume") || textLower.includes("true volume") || textLower.includes("weight tracking")) {
-        responseSuggestion = `Hi ${customer.name}! Our SMART TRUEVOLUME system determines the remaining quantity of liquor in a bottle in real-time by continuously monitoring its weight using a digital weighing machine compared with predefined reference data. This provides accurate volume tracking and controls consumption/wastage. Would you like a product demo?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.992 INTELLIGENT RESTAURANT AI SYSTEM
-    else if (textLower.includes("intelligent restaurant") || textLower.includes("restaurant seat map") || textLower.includes("digital menu")) {
-        responseSuggestion = `Hi ${customer.name}! Our INTELLIGENT RESTAURANT AI SYSTEM allows patrons to book seats via a real-time interactive seat map, explore digital menus, customize orders, and process secure two-stage payments (advance booking deposit + final checkout billing). Would you like to schedule a demo of our restaurant ordering and reservation platform?`;
-        score = 95;
-        temp = "Hot";
-    }
-    // 3.99 AI / Computer Vision / Software solutions enquiry detection
-    else if (textLower.includes("computer vision") || textLower.includes("software") || textLower.includes("intelligent") || textLower.includes("helmet") || textLower.includes("drowsiness") || textLower.includes("fall detection") || textLower.includes("truevolume") || textLower.includes("storyboard") || textLower.includes("fable") || textLower.includes("restaurant") || textLower.includes("bar") || textLower.includes("staff movement") || textLower.includes("intrusion") || textLower.includes("traffic")) {
-        responseSuggestion = `Hi ${customer.name}! Smart Vision offers specialized AI & Computer Vision tools, including safety detection (Helmet/Vest), driver drowsiness warning, crowd/intrusion alerts, and retail automation (Restaurant Seating, Bar TrueVolume tracking). What AI or software solution are you looking to implement?`;
-        score = 90;
-        temp = "Hot";
-    }
-    // 4. Default greetings
-    else if (textLower.includes("hello") || textLower.includes("hi") || textLower.includes("hey")) {
-        responseSuggestion = `Hello ${customer.name}! Thank you for contacting Smart Vision. How can we assist you with our services today?`;
-    } else {
-        responseSuggestion = `Thank you for your message, ${customer.name}. I've logged your enquiry and one of our human staff members will respond in a moment.`;
+        // 2. Booking request detection
+        else if (textLower.includes("schedule") || textLower.includes("tomorrow") || textLower.includes("book") || textLower.includes("visit") || textLower.includes("inspection")) {
+            responseSuggestion = `Absolutely, ${customer.name}. I've logged your request for a survey. I can book our service team for tomorrow at 10:00 AM. Does that work for you?`;
+            score = 90;
+            temp = "Hot";
+        }
+        // 3. Price enquiry detection (Lead Qualification)
+        else if (textLower.includes("price") || textLower.includes("cost") || textLower.includes("quote") || textLower.includes("how much")) {
+            responseSuggestion = `Hi ${customer.name}! We'd be happy to prepare a quote for you. What services are you looking for, and where is your property located?`;
+            score = 88;
+            temp = "Hot";
+        }
+        // 3.5 CCTV / Security camera enquiry detection
+        else if (textLower.includes("cctv") || textLower.includes("camera") || textLower.includes("security")) {
+            responseSuggestion = `Hi ${customer.name}! Smart Vision supplies and installs premium IP & Analog CCTV camera systems (Dome, Bullet, PTZ) from certified brands like Hikvision, Dahua, and Honeywell, fully compliant with Qatar MOI-SSD regulations. How many cameras do you require, and is it for a commercial or residential property?`;
+            score = 85;
+            temp = "Warm";
+        }
+        // 3.7 MEP / HVAC / Maintenance Services enquiry detection
+        else if (textLower.includes("mep") || textLower.includes("hvac") || textLower.includes("service") || textLower.includes("maintenance") || textLower.includes("ac repair")) {
+            responseSuggestion = `Hi ${customer.name}! Smart Vision offers full MEP services, including Central/Split AC repairs, preventative HVAC maintenance, electrical installations, plumbing, and fire safety systems in Qatar. Are you interested in a commercial MEP contract or a one-time residential service?`;
+            score = 92;
+            temp = "Hot";
+        }
+        // 3.8 Fire Alarm & Fire Fighting enquiry detection
+        else if (textLower.includes("fire") || textLower.includes("alarm") || textLower.includes("smoke") || textLower.includes("sprinkler") || textLower.includes("suppression") || textLower.includes("civil defence") || textLower.includes("qcd")) {
+            responseSuggestion = `Hi ${customer.name}! Smart Vision is a QCD Grade A Certified contractor in Qatar. We design, install, and maintain Civil Defence-approved Fire Alarm and Fire Fighting/Suppression systems. Do you need testing, maintenance, or QCD approvals for your facility?`;
+            score = 94;
+            temp = "Hot";
+        }
+        // 3.9 Access Control & Biometrics enquiry detection
+        else if (textLower.includes("access") || textLower.includes("biometric") || textLower.includes("door lock") || textLower.includes("gate") || textLower.includes("turnstile") || textLower.includes("fingerprint")) {
+            responseSuggestion = `Hi ${customer.name}! Smart Vision offers advanced Access Control and Biometric security systems (card readers, facial recognition, turnstiles) for offices and industrial sites in Doha. What is the scope of your access control requirement?`;
+            score = 86;
+            temp = "Warm";
+        }
+        // 3.95 ELV, IT Cabling & Public Address (PA) enquiry detection
+        else if (textLower.includes("network") || textLower.includes("cabling") || textLower.includes("cisco") || textLower.includes("wifi") || textLower.includes("public address") || textLower.includes("speaker") || textLower.includes("sound") || textLower.includes("audio")) {
+            responseSuggestion = `Hi ${customer.name}! We specialize in ELV systems integration, including Structured Fiber/Cat6 Cabling, Cisco IT networks, and IP-based Public Address & Voice Evacuation audio arrays. Are you looking to set up an IT network or audio infrastructure?`;
+            score = 85;
+            temp = "Warm";
+        }
+        // 3.97 Building Automation, BMS & KNX/DALI lighting
+        else if (textLower.includes("bms") || textLower.includes("automation") || textLower.includes("knx") || textLower.includes("smart home") || textLower.includes("lighting control") || textLower.includes("dali")) {
+            responseSuggestion = `Hi ${customer.name}! We design and integrate Intelligent Building Management Systems (BMS), KNX lighting controls, DALI smart dimming, and energy management solutions to optimize your facility's operations. What project automation scope are you planning?`;
+            score = 88;
+            temp = "Warm";
+        }
+        // 3.98 SMART VISION - Restaurant Monitoring AI System detection
+        else if (textLower.includes("restaurant monitoring") || (textLower.includes("restaurant") && textLower.includes("monitoring"))) {
+            responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Restaurant Monitoring AI System uses intelligent cameras to track table occupancy in real time, speed up seating management, and analyze service flow and dining patterns to optimize staff allocation. Would you like to schedule a demo of our restaurant analytics system?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.985 SMART VISION - Crowd Detection
+        else if (textLower.includes("crowd detection") || textLower.includes("crowd monitoring") || textLower.includes("crowd count") || textLower.includes("crowd")) {
+            responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Crowd Detection AI system utilizes advanced density mapping and object detection algorithms to count and monitor dense groups of people in real-time, perfect for malls, events, and public safety management. Would you like a product overview sheet or a live demo?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.987 SMART VISION - Staff Movement AI System detection
+        else if (textLower.includes("staff movement") || textLower.includes("employee tracking") || textLower.includes("employee movement")) {
+            responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Staff Movement AI System uses intelligent video analytics to track employee presence, movement patterns, and activity flow across zones. It optimizes workforce efficiency, prevents idle time, and ensures duty compliance with real-time insights and automated alerts. Would you like a quote or a demo of our workforce tracking dashboard?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.988 SMART VISION - Unauthorized Intrusion Detection
+        else if (textLower.includes("intrusion") || textLower.includes("unauthorized intrusion") || textLower.includes("perimeter security")) {
+            responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Unauthorized Intrusion Detection system uses AI-driven video analytics to identify abnormal movements, forced entry attempts, and suspicious behavior around residential or private properties in real-time, ensuring early warning of security breaches. Would you like to schedule a survey for a perimeter monitoring setup?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.989 SMART VISION - Bar Monitoring System
+        else if (textLower.includes("bar monitoring") || textLower.includes("bar tracking") || (textLower.includes("bar") && textLower.includes("monitoring"))) {
+            responseSuggestion = `Hi ${customer.name}! Our SMART VISION - Bar Monitoring System uses AI-powered video analytics to track real-time pouring activity, detect over-pouring and wastage, verify staff compliance, and prevent inventory shrinkage. Would you like to schedule a demo of our bar automation system?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.991 SMART TRUEVOLUME
+        else if (textLower.includes("truevolume") || textLower.includes("true volume") || textLower.includes("weight tracking")) {
+            responseSuggestion = `Hi ${customer.name}! Our SMART TRUEVOLUME system determines the remaining quantity of liquor in a bottle in real-time by continuously monitoring its weight using a digital weighing machine compared with predefined reference data. This provides accurate volume tracking and controls consumption/wastage. Would you like a product demo?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.992 INTELLIGENT RESTAURANT AI SYSTEM
+        else if (textLower.includes("intelligent restaurant") || textLower.includes("restaurant seat map") || textLower.includes("digital menu")) {
+            responseSuggestion = `Hi ${customer.name}! Our INTELLIGENT RESTAURANT AI SYSTEM allows patrons to book seats via a real-time interactive seat map, explore digital menus, customize orders, and process secure two-stage payments (advance booking deposit + final checkout billing). Would you like to schedule a demo of our restaurant ordering and reservation platform?`;
+            score = 95;
+            temp = "Hot";
+        }
+        // 3.99 AI / Computer Vision / Software solutions enquiry detection
+        else if (textLower.includes("computer vision") || textLower.includes("software") || textLower.includes("intelligent") || textLower.includes("helmet") || textLower.includes("drowsiness") || textLower.includes("fall detection") || textLower.includes("truevolume") || textLower.includes("storyboard") || textLower.includes("fable") || textLower.includes("restaurant") || textLower.includes("bar") || textLower.includes("staff movement") || textLower.includes("intrusion") || textLower.includes("traffic")) {
+            responseSuggestion = `Hi ${customer.name}! Smart Vision offers specialized AI & Computer Vision tools, including safety detection (Helmet/Vest), driver drowsiness warning, crowd/intrusion alerts, and retail automation (Restaurant Seating, Bar TrueVolume tracking). What AI or software solution are you looking to implement?`;
+            score = 90;
+            temp = "Hot";
+        }
+        // 4. Default greetings
+        else if (textLower.includes("hello") || textLower.includes("hi") || textLower.includes("hey")) {
+            responseSuggestion = `Hello ${customer.name}! Thank you for contacting Smart Vision. How can we assist you with our services today?`;
+        } else {
+            responseSuggestion = `Thank you for your message, ${customer.name}. I've logged your enquiry and one of our human staff members will respond in a moment.`;
+        }
     }
 
     customer.aiSuggestion = responseSuggestion;
