@@ -2328,6 +2328,22 @@
                                 <button class="btn btn-secondary" onclick="triggerManualZohoSync()">Trigger Manual Sync</button>
                             </div>
                         </div>
+
+                        <!-- Backend API Server Link card -->
+                        <div class="glass-panel integration-card" style="padding:20px; border-radius:var(--radius-lg); display:flex; gap:16px;">
+                            <div class="integration-icon" style="font-size:32px;">🖥️</div>
+                            <div class="integration-details" style="flex:1; display:flex; flex-direction:column; gap:12px;">
+                                <div class="integration-title" style="font-weight:700; font-size:14px; color:#fff;">CRM Backend Server Link</div>
+                                <div class="integration-desc" style="font-size:11px; color:var(--text-muted); line-height:1.4;">Configure your backend Node.js API server URL. Use localhost for local runs, or enter a remote server IP/domain.</div>
+                                
+                                <div class="form-group">
+                                    <label>Backend API URL</label>
+                                    <input type="text" class="form-control" id="settings-backend-url" placeholder="http://localhost:3000" style="font-size:12px;">
+                                </div>
+                                
+                                <button class="btn btn-primary" onclick="saveBackendSettings()">Save Backend URL</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

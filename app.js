@@ -4,9 +4,17 @@ let activeChatId = 1;
 let activeOpTab = 'tasks';
 let activeCustomerId = 1;
 
-const BACKEND_URL = (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:'))
-    ? 'http://localhost:3000'
-    : window.location.origin; // Dynamically resolves to the server (localhost on PC, 192.168.1.59:3000 on Android)
+let BACKEND_URL = localStorage.getItem("settings-backend-url");
+if (!BACKEND_URL) {
+    const isLocalOrigin = window.location.hostname === 'localhost' || 
+                          window.location.hostname === '127.0.0.1' || 
+                          window.location.hostname.startsWith('192.168.');
+    if (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:') || !isLocalOrigin) {
+        BACKEND_URL = 'http://localhost:3000';
+    } else {
+        BACKEND_URL = window.location.origin;
+    }
+}
 let isBackendConnected = false;
 let seenMessageIds = new Set(); // Track by ID to survive server restarts
 let isAppInitialized = false;
@@ -26,7 +34,7 @@ let smtpConfig = (() => {
     };
 })();
 
-let webhookUrl = localStorage.getItem("webhookUrl") || (window.location.origin + "/api/webhooks/incoming");
+let webhookUrl = localStorage.getItem("webhookUrl") || (BACKEND_URL + "/api/webhooks/incoming");
 
 function formatQatarPhoneNumber(phone) {
     if (!phone) return "";
@@ -5387,6 +5395,12 @@ function switchSettingsTab(tabId) {
 }
 
 function loadAllSettings() {
+    // 1b. Backend URL
+    const savedBackendUrl = localStorage.getItem("settings-backend-url") || BACKEND_URL;
+    if (document.getElementById("settings-backend-url")) {
+        document.getElementById("settings-backend-url").value = savedBackendUrl;
+    }
+
     // 1. Meta API
     const waPhoneId = localStorage.getItem("settings-wa-phone-id");
     const waToken = localStorage.getItem("settings-wa-token");
@@ -5479,6 +5493,38 @@ function loadAllSettings() {
     }
     if (docBank && document.getElementById("settings-doc-bank")) {
         document.getElementById("settings-doc-bank").value = docBank;
+    }
+}
+
+function saveBackendSettings() {
+    const backendUrlInput = document.getElementById("settings-backend-url");
+    if (!backendUrlInput) return;
+    
+    let url = backendUrlInput.value.trim();
+    if (!url) {
+        alert("Please enter a valid backend URL.");
+        return;
+    }
+    
+    // Strip trailing slash if present
+    if (url.endsWith('/')) {
+        url = url.substring(0, url.length - 1);
+    }
+    
+    localStorage.setItem("settings-backend-url", url);
+    BACKEND_URL = url;
+    
+    logActivity("Backend Link Updated", `Backend API server URL set to: ${url}`, "success");
+    alert(`Backend Server URL saved successfully! The CRM will now connect to: ${url}`);
+    
+    // Optionally update the default webhook URL if it hasn't been custom modified
+    if (!localStorage.getItem("webhookUrl")) {
+        const defaultWebhook = url + "/api/webhooks/incoming";
+        webhookUrl = defaultWebhook;
+        const webhookInp = document.getElementById("settings-webhook-url");
+        if (webhookInp) {
+            webhookInp.value = defaultWebhook;
+        }
     }
 }
 
