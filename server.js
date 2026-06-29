@@ -70,6 +70,28 @@ function isDirectChat(jid) {
     return jid.endsWith('@s.whatsapp.net') || jid.endsWith('@lid');
 }
 
+// Helper to resolve LID JIDs (like 221946897764392@lid) to phone number JIDs (like 97430738570@s.whatsapp.net) using Baileys session files
+function resolveJid(jid) {
+    if (!jid) return jid;
+    if (jid.endsWith('@lid')) {
+        const lidId = jid.split('@')[0];
+        const mappingPath = path.join(authPath, `lid-mapping-${lidId}_reverse.json`);
+        if (fs.existsSync(mappingPath)) {
+            try {
+                const pn = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
+                if (pn) {
+                    const resolved = `${pn}@s.whatsapp.net`;
+                    console.log(`[LID RESOLVER] Successfully resolved LID ${jid} to Phone JID ${resolved}`);
+                    return resolved;
+                }
+            } catch (e) {
+                console.warn(`[LID RESOLVER] Failed to parse mapping file for ${lidId}:`, e.message);
+            }
+        }
+    }
+    return jid;
+}
+
 // Initialize and Connect WhatsApp Socket
 async function connectToWhatsApp() {
     console.log('Initializing WhatsApp Baileys socket...');
@@ -152,7 +174,18 @@ async function connectToWhatsApp() {
         for (const msg of messages) {
             if (!msg?.key) continue;
 
-            const fromJid = msg.key.remoteJid;
+            console.log("----------------- INCOMING MESSAGE METADATA -----------------");
+            console.log("msg keys:", Object.keys(msg));
+            console.log("msg.key keys:", Object.keys(msg.key));
+            console.log("remoteJid:", msg.key.remoteJid);
+            if (msg.sender) console.log("sender:", msg.sender);
+            if (msg.senderPn) console.log("senderPn:", msg.senderPn);
+            if (msg.key.participant) console.log("participant:", msg.key.participant);
+            if (msg.key.remoteJidAlt) console.log("remoteJidAlt:", msg.key.remoteJidAlt);
+            if (msg.key.participantAlt) console.log("participantAlt:", msg.key.participantAlt);
+            console.log("-------------------------------------------------------------");
+
+            const fromJid = resolveJid(msg.key.remoteJid);
             const isFromMe = msg.key.fromMe;
 
             console.log(`  → fromMe=${isFromMe} jid=${fromJid}`);
@@ -270,6 +303,15 @@ app.get('/api/status', (req, res) => {
 
 // All received messages
 app.get('/api/messages', (req, res) => {
+    // Dynamically resolve any unresolved LID JIDs in incomingMessages
+    incomingMessages.forEach(msg => {
+        if (msg.from && msg.from.endsWith('@lid')) {
+            const resolved = resolveJid(msg.from);
+            if (resolved && !resolved.endsWith('@lid')) {
+                msg.from = resolved;
+            }
+        }
+    });
     res.json({ messages: incomingMessages });
 });
 
