@@ -114,13 +114,22 @@ async function connectToWhatsApp() {
 
         if (connection === 'close') {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
-            console.log(`Connection closed [${statusCode}] — Reconnecting: ${shouldReconnect}`);
+            const isLoggedOut = statusCode === DisconnectReason.loggedOut;
+            console.log(`Connection closed [${statusCode}] — LoggedOut: ${isLoggedOut}`);
             qrCodeBase64 = null;
             connectionStatus = 'DISCONNECTED';
-            if (shouldReconnect) {
-                setTimeout(connectToWhatsApp, 3000);
+
+            if (isLoggedOut) {
+                // Session is invalid — clear auth files and show a fresh QR
+                console.log('WhatsApp session logged out. Clearing session files and generating new QR...');
+                try {
+                    const files = fs.readdirSync(authPath);
+                    for (const f of files) fs.rmSync(path.join(authPath, f), { recursive: true, force: true });
+                    console.log('Session files cleared. Reconnecting for new QR...');
+                } catch (e) { console.warn('Could not clear session files:', e.message); }
             }
+            // Always reconnect so a new QR is shown
+            setTimeout(connectToWhatsApp, 3000);
         } else if (connection === 'open') {
             console.log('✅ WhatsApp CONNECTED — ready to send and receive messages!');
             qrCodeBase64 = null;
@@ -464,12 +473,7 @@ app.post('/api/fetch-emails', async (req, res) => {
 app.get('/api/excel/read', (req, res) => {
     const xlsPath = path.join(__dirname, 'crm.xls');
     
-    const defaultData = [
-        { "ID": 1, "Name": "Najeeb Shekasan", "Phone": "+974 30544808", "Email": "najeeb@gmail.com", "Company": "Najeeb HVAC WLL", "Status": "New" },
-        { "ID": 2, "Name": "Fatima Al-Kuwari", "Phone": "+974 55160323", "Email": "fatima@al-kuwari.qa", "Company": "Doha Retail Group", "Status": "Qualified" },
-        { "ID": 3, "Name": "Ali Hassan", "Phone": "+974 66012345", "Email": "ali@hassan.com", "Company": "Al Rayyan Contracting", "Status": "Proposal" },
-        { "ID": 4, "Name": "John Smith", "Phone": "+974 50000001", "Email": "john@smith.com", "Company": "Global Tech Qatar", "Status": "Won" }
-    ];
+    const defaultData = [];
 
     if (!fs.existsSync(xlsPath)) {
         try {
