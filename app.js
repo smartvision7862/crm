@@ -6215,6 +6215,57 @@ function saveExcelToDisk() {
     });
 }
 
+function exportExcelToBrowser() {
+    if (!excelRows || excelRows.length === 0) {
+        alert("The spreadsheet database is empty. Add or load rows first.");
+        return;
+    }
+    
+    // Header row matching standard CRM schema
+    const headers = ["ID", "Name", "Phone", "Email", "Company", "Status"];
+    
+    // Map each row in the array
+    const csvLines = excelRows.map(row => {
+        const id = row.ID || row.id || '';
+        const name = row.Name || row.name || '';
+        const phone = row.Phone || row.phone || '';
+        const email = row.Email || row.email || '';
+        const company = row.Company || row.company || '';
+        const status = row.Status || row.status || '';
+        
+        // Escape quotes and wrap in quotes to follow RFC-4180 rules
+        const escapeCsv = (val) => {
+            const str = (val === null || val === undefined) ? '' : val.toString();
+            return `"${str.replace(/"/g, '""')}"`;
+        };
+        
+        return [
+            id,
+            escapeCsv(name),
+            escapeCsv(phone),
+            escapeCsv(email),
+            escapeCsv(company),
+            escapeCsv(status)
+        ].join(",");
+    });
+    
+    // Prepend UTF-8 Byte Order Mark (BOM) to force Excel to read UTF-8 characters correctly
+    const bom = "\uFEFF";
+    const csvContent = bom + [headers.join(",")].concat(csvLines).join("\r\n");
+    
+    // Create blob and trigger native browser download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `crm_database_export_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    logActivity("Excel Exported", `Downloaded crm spreadsheet with ${excelRows.length} rows.`, "success");
+}
+
 function syncExcelWithCRMContacts() {
     if (customers.length === 0) {
         alert("There are no customers in the CRM database to sync.");
