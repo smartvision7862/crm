@@ -1,0 +1,623 @@
+﻿
+≡ƒÜÇ Smart Vision CRM Server ΓåÆ http://localhost:3000
+
+Initializing WhatsApp Baileys socket...
+Using Baileys WA version: 2.3000.1035194821
+[messages.upsert] type=append, count=1
+  Γä╣ Skipping history-load append batch
+Γ£à WhatsApp CONNECTED ΓÇö ready to send and receive messages!
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "customer_created"
+Payload: {
+  "event": "customer_created",
+  "timestamp": "2026-06-08T12:32:58.276Z",
+  "data": {
+    "id": 7,
+    "name": "Ahmed",
+    "phone": "+97430544802",
+    "email": "mrimtiyazahmed@gmail.com",
+    "stage": "new",
+    "temp": "hot",
+    "channel": "Manual",
+    "notes": "cctv",
+    "labels": [],
+    "loyaltyPoints": 0,
+    "dateAdded": "2026-06-08",
+    "lastContact": "03:32 PM",
+    "messages": [],
+    "aiSuggestion": null,
+    "score": 50,
+    "history": [
+      {
+        "type": "system",
+        "text": "Customer profile created manually",
+        "time": "6/8/2026, 3:32:58 PM"
+      }
+    ]
+  }
+}
+
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=120363191626486535@newsletter
+  Γ£ù Filtered out: 120363191626486535@newsletter
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "customer_created"
+Payload: {
+  "event": "customer_created",
+  "timestamp": "2026-06-08T12:47:11.200Z",
+  "data": {
+    "id": 7,
+    "name": "imtiyaz Ahmed",
+    "phone": "+97430544802",
+    "email": "mrimtiyazahmed@gmail.com",
+    "stage": "new",
+    "temp": "hot",
+    "channel": "Manual",
+    "notes": "cctv need",
+    "labels": [],
+    "loyaltyPoints": 0,
+    "dateAdded": "2026-06-08",
+    "lastContact": "03:47 PM",
+    "messages": [],
+    "aiSuggestion": null,
+    "score": 50,
+    "history": [
+      {
+        "type": "system",
+        "text": "Customer profile created manually",
+        "time": "6/8/2026, 3:47:11 PM"
+      }
+    ]
+  }
+}
+
+Saving 7 rows to crm.xls...
+node.exe : Failed to write Excel file: Error: EBUSY: resource busy or locked, open 
+'C:\Users\uniqu\Downloads\CRM\crm.xls'
+At line:1 char:1
++ & 'c:\Users\uniqu\Downloads\CRM\node_bin\node-v20.12.2-win-x64\node.e ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Failed to write...ds\CRM\crm.xls':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+[messages.upsert] type=append, count=1
+  ΓåÆ fromMe=false jid=120363425584765229@g.us
+  Γ£ù Filtered out: 120363425584765229@g.us
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "customer_created"
+Payload: {
+  "event": "customer_created",
+  "timestamp": "2026-06-08T12:51:13.474Z",
+  "data": {
+    "id": 7,
+    "name": "IMT",
+    "phone": "30544802",
+    "email": "MRIT@GMAIL.COM",
+    "stage": "new",
+    "temp": "hot",
+    "channel": "Manual",
+    "notes": "GDFFGF",
+    "labels": [],
+    "loyaltyPoints": 0,
+    "dateAdded": "2026-06-08",
+    "lastContact": "03:51 PM",
+    "messages": [],
+    "aiSuggestion": null,
+    "score": 50,
+    "history": [
+      {
+        "type": "system",
+        "text": "Customer profile created manually",
+        "time": "6/8/2026, 3:51:13 PM"
+      }
+    ]
+  }
+}
+
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 5 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 5 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=120363169266001084@newsletter
+  Γ£ù Filtered out: 120363169266001084@newsletter
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=120363399492571830@newsletter
+  Γ£ù Filtered out: 120363399492571830@newsletter
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "customer_created"
+Payload: {
+  "event": "customer_created",
+  "timestamp": "2026-06-08T12:57:20.013Z",
+  "data": {
+    "id": 8,
+    "name": "IMT",
+    "phone": "30544802",
+    "email": "MRIMT@GMAIL.COM",
+    "stage": "new",
+    "temp": "hot",
+    "channel": "Manual",
+    "notes": "GFGFGF",
+    "labels": [],
+    "loyaltyPoints": 0,
+    "dateAdded": "2026-06-08",
+    "lastContact": "03:57 PM",
+    "messages": [],
+    "aiSuggestion": null,
+    "score": 50,
+    "history": [
+      {
+        "type": "system",
+        "text": "Customer profile created manually",
+        "time": "6/8/2026, 3:57:20 PM"
+      }
+    ]
+  }
+}
+
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "customer_created"
+Payload: {
+  "event": "customer_created",
+  "timestamp": "2026-06-08T12:59:01.761Z",
+  "data": {
+    "id": 7,
+    "name": "IMTIYAZ",
+    "phone": "30544802",
+    "email": "AHMED@GMAIL.COM",
+    "stage": "new",
+    "temp": "hot",
+    "channel": "Manual",
+    "notes": "CCTV",
+    "labels": [],
+    "loyaltyPoints": 0,
+    "dateAdded": "2026-06-08",
+    "lastContact": "03:59 PM",
+    "messages": [],
+    "aiSuggestion": null,
+    "score": 50,
+    "history": [
+      {
+        "type": "system",
+        "text": "Customer profile created manually",
+        "time": "6/8/2026, 3:59:01 PM"
+      }
+    ]
+  }
+}
+
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 7 rows to crm.xls...
+Failed to write Excel file: Error: EBUSY: resource busy or locked, open 'C:\Users\uniqu\Downloads\CRM\crm.xls'
+    at Object.openSync (node:fs:582:18)
+    at Object.writeFileSync (node:fs:2355:35)
+    at write_dl (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:3109:112)
+    at write_cfb_ctr (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23744:23)
+    at write_cfb_type (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23791:9)
+    at writeSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23885:46)
+    at Object.writeFileSync (C:\Users\uniqu\Downloads\CRM\node_modules\xlsx\xlsx.js:23914:9)
+    at file:///C:/Users/uniqu/Downloads/CRM/server.js:406:14
+    at Layer.handleRequest (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\uniqu\Downloads\CRM\node_modules\router\lib\route.js:157:13) {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'open',
+  path: 'C:\\Users\\uniqu\\Downloads\\CRM\\crm.xls'
+}
+Saving 7 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "customer_created"
+Payload: {
+  "event": "customer_created",
+  "timestamp": "2026-06-08T13:05:31.101Z",
+  "data": {
+    "id": 8,
+    "name": "PASHA",
+    "phone": "30544806",
+    "email": "MRIMTIYAZ",
+    "stage": "new",
+    "temp": "hot",
+    "channel": "Manual",
+    "notes": "CCTV",
+    "labels": [],
+    "loyaltyPoints": 0,
+    "dateAdded": "2026-06-08",
+    "lastContact": "04:05 PM",
+    "messages": [],
+    "aiSuggestion": null,
+    "score": 50,
+    "history": [
+      {
+        "type": "system",
+        "text": "Customer profile created manually",
+        "time": "6/8/2026, 4:05:31 PM"
+      }
+    ]
+  }
+}
+
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[messages.upsert] type=notify, count=2
+  ΓåÆ fromMe=true jid=97430544802@s.whatsapp.net
+  Γ£ù No text content
+  ΓåÆ fromMe=false jid=120363354997979827@newsletter
+  Γ£ù Filtered out: 120363354997979827@newsletter
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=true jid=97430544802@s.whatsapp.net
+  Γ£ù No text content
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=true jid=97430544802@s.whatsapp.net
+  Γ£ù No text content
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γ£à INCOMING from Imtiyaz Ahmed (+265463808393312): CCTV
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_received"
+Payload: {
+  "event": "whatsapp_message_received",
+  "timestamp": "2026-06-08T13:11:44.019Z",
+  "data": {
+    "id": "A54947D9DD6B2DDAA45ED082B53DB9C8",
+    "from": "265463808393312@lid",
+    "name": "Imtiyaz Ahmed",
+    "text": "CCTV",
+    "time": "04:11 PM"
+  }
+}
+
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_sent"
+Payload: {
+  "event": "whatsapp_message_sent",
+  "timestamp": "2026-06-08T13:11:49.035Z",
+  "data": {
+    "to": "265463808393312@lid",
+    "text": "Hi Imtiyaz Ahmed! Smart Vision supplies and installs premium IP & Analog CCTV camera systems (Dome, Bullet, PTZ) from certified brands like Hikvision, Dahua, and Honeywell, fully compliant with Qatar MOI-SSD regulations. How many cameras do you require, and is it for a commercial or residential property?",
+    "sender": "autopilot"
+  }
+}
+
+Sending to 265463808393312@lid: Hi Imtiyaz Ahmed! Smart Vision supplies and installs premium IP & Analog CCTV ca
+[messages.upsert] type=append, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γä╣ Own outgoing message ΓÇö skipping
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=status@broadcast
+  Γ£ù Filtered out: status@broadcast
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γ£à INCOMING from Imtiyaz Ahmed (+265463808393312): Ai
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_received"
+Payload: {
+  "event": "whatsapp_message_received",
+  "timestamp": "2026-06-08T13:13:12.015Z",
+  "data": {
+    "id": "A56A2A80D0F5CFF791436C3FA2629BB7",
+    "from": "265463808393312@lid",
+    "name": "Imtiyaz Ahmed",
+    "text": "Ai",
+    "time": "04:13 PM"
+  }
+}
+
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_sent"
+Payload: {
+  "event": "whatsapp_message_sent",
+  "timestamp": "2026-06-08T13:13:17.020Z",
+  "data": {
+    "to": "265463808393312@lid",
+    "text": "Thank you for your message, Imtiyaz Ahmed. I've logged your enquiry and one of our human staff members will respond in a moment.",
+    "sender": "autopilot"
+  }
+}
+
+Sending to 265463808393312@lid: Thank you for your message, Imtiyaz Ahmed. I've logged your enquiry and one of o
+[messages.upsert] type=append, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γä╣ Own outgoing message ΓÇö skipping
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γ£à INCOMING from Imtiyaz Ahmed (+265463808393312): Okay
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_received"
+Payload: {
+  "event": "whatsapp_message_received",
+  "timestamp": "2026-06-08T13:13:32.012Z",
+  "data": {
+    "id": "A5787C8A157FEB2EB37C9150B0005684",
+    "from": "265463808393312@lid",
+    "name": "Imtiyaz Ahmed",
+    "text": "Okay",
+    "time": "04:13 PM"
+  }
+}
+
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_sent"
+Payload: {
+  "event": "whatsapp_message_sent",
+  "timestamp": "2026-06-08T13:13:37.015Z",
+  "data": {
+    "to": "265463808393312@lid",
+    "text": "Thank you for your message, Imtiyaz Ahmed. I've logged your enquiry and one of our human staff members will respond in a moment.",
+    "sender": "autopilot"
+  }
+}
+
+Sending to 265463808393312@lid: Thank you for your message, Imtiyaz Ahmed. I've logged your enquiry and one of o
+[messages.upsert] type=append, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γä╣ Own outgoing message ΓÇö skipping
+Saving 8 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=120363313805364657@newsletter
+  Γ£ù Filtered out: 120363313805364657@newsletter
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=120363354997979827@newsletter
+  Γ£ù Filtered out: 120363354997979827@newsletter
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=120363191626486535@newsletter
+  Γ£ù Filtered out: 120363191626486535@newsletter
+SyntaxError: Bad escaped character in JSON at position 6
+    at JSON.parse (<anonymous>)
+    at parse (C:\Users\uniqu\Downloads\CRM\node_modules\body-parser\lib\types\json.js:72:19)
+    at C:\Users\uniqu\Downloads\CRM\node_modules\body-parser\lib\read.js:162:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    at invokeCallback (C:\Users\uniqu\Downloads\CRM\node_modules\raw-body\index.js:238:16)
+    at done (C:\Users\uniqu\Downloads\CRM\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (C:\Users\uniqu\Downloads\CRM\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:518:28)
+    at endReadableNT (node:internal/streams/readable:1696:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+Sending to 265463808393312@lid: Test message from Antigravity diagnostics
+[messages.upsert] type=append, count=1
+  ΓåÆ fromMe=true jid=265463808393312@lid
+  Γä╣ Own outgoing message ΓÇö skipping
+[messages.upsert] type=notify, count=1
+  ΓåÆ fromMe=false jid=76901926338717@lid
+  Γ£à INCOMING from M. Pasha (+76901926338717): https://youtu.be/3tSb-iP9KOw?si=gy0IayuxohSrV5Hv
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_received"
+Payload: {
+  "event": "whatsapp_message_received",
+  "timestamp": "2026-06-08T13:20:26.024Z",
+  "data": {
+    "id": "AC3ABC0317DBDD9307DD8CAD2700D2BD",
+    "from": "76901926338717@lid",
+    "name": "M. Pasha",
+    "text": "https://youtu.be/3tSb-iP9KOw?si=gy0IayuxohSrV5Hv",
+    "time": "04:20 PM"
+  }
+}
+
+Saving 9 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_sent"
+Payload: {
+  "event": "whatsapp_message_sent",
+  "timestamp": "2026-06-08T13:20:31.027Z",
+  "data": {
+    "to": "76901926338717@lid",
+    "text": "Thank you for your message, M. Pasha. I've logged your enquiry and one of our human staff members will respond in a moment.",
+    "sender": "autopilot"
+  }
+}
+
+Sending to 76901926338717@lid: Thank you for your message, M. Pasha. I've logged your enquiry and one of our hu
+[messages.upsert] type=append, count=1
+  ΓåÆ fromMe=true jid=76901926338717@lid
+  Γä╣ Own outgoing message ΓÇö skipping
+Saving 9 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
+[TEST] Injected fake incoming message from Imtiyaz Ahmed Test (97430544802): "Hello, this is a test message to verify incoming messages!"
+
+≡ƒöö [WEBHOOK RECEIVER] Received event: "whatsapp_message_received"
+Payload: {
+  "event": "whatsapp_message_received",
+  "timestamp": "2026-06-08T13:20:42.733Z",
+  "data": {
+    "id": "test_1780924841864",
+    "from": "97430544802",
+    "name": "Imtiyaz Ahmed Test",
+    "text": "Hello, this is a test message to verify incoming messages!",
+    "time": "04:20 PM"
+  }
+}
+
+Saving 9 rows to crm.xls...
+Saved successfully to C:\Users\uniqu\Downloads\CRM\crm.xls
