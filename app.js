@@ -10,7 +10,8 @@ if (!BACKEND_URL) {
                           window.location.hostname === '127.0.0.1' || 
                           window.location.hostname.startsWith('192.168.');
     if (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:') || !isLocalOrigin) {
-        BACKEND_URL = 'http://localhost:3000';
+        // Running from GitHub Pages or a static host — use the public tunnel backend
+        BACKEND_URL = 'https://smartvision-crm.loca.lt';
     } else {
         BACKEND_URL = window.location.origin;
     }

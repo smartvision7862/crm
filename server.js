@@ -20,6 +20,12 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// Allow localtunnel requests to bypass the tunnel password/reminder page
+app.use((req, res, next) => {
+    res.setHeader('bypass-tunnel-reminder', 'true');
+    next();
+});
+
 // Serve front-end static files (index.html, style.css, app.js, etc.)
 app.use(express.static(__dirname));
 
