@@ -6986,3 +6986,254 @@ function initUserManualLogic() {
         });
     });
 }
+
+// ==========================================================================
+// Help Chatbot Widget Logic
+// ==========================================================================
+
+let helpBotOpen = false;
+
+function toggleHelpBot() {
+    const win = document.getElementById('help-bot-window');
+    if (!win) return;
+    helpBotOpen = !helpBotOpen;
+    if (helpBotOpen) {
+        win.style.display = 'flex';
+        win.style.flexDirection = 'column';
+        // Re-trigger animation
+        win.style.animation = 'none';
+        win.offsetHeight; // reflow
+        win.style.animation = '';
+        setTimeout(() => {
+            const input = document.getElementById('help-bot-input');
+            if (input) input.focus();
+        }, 300);
+    } else {
+        win.style.display = 'none';
+    }
+}
+
+function handleHelpBotInput(e) {
+    if (e.key === 'Enter') sendHelpBotMessage();
+}
+
+function sendHelpBotMessage() {
+    const input = document.getElementById('help-bot-input');
+    const container = document.getElementById('help-bot-messages');
+    if (!input || !container) return;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    // Append user message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'help-msg user';
+    userMsg.innerHTML = `<div class="msg-bubble">${escapeHtml(text)}</div>`;
+    container.appendChild(userMsg);
+    container.scrollTop = container.scrollHeight;
+
+    // Show typing indicator
+    const typingEl = document.createElement('div');
+    typingEl.className = 'help-msg bot';
+    typingEl.id = 'help-typing';
+    typingEl.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+    container.appendChild(typingEl);
+    container.scrollTop = container.scrollHeight;
+
+    // Generate and display response after short delay
+    setTimeout(() => {
+        const typing = document.getElementById('help-typing');
+        if (typing) typing.remove();
+        const response = generateHelpBotResponse(text);
+        const botMsg = document.createElement('div');
+        botMsg.className = 'help-msg bot';
+        botMsg.innerHTML = `<div class="msg-bubble">${response}</div>`;
+        container.appendChild(botMsg);
+        container.scrollTop = container.scrollHeight;
+    }, 800 + Math.random() * 400);
+}
+
+function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function generateHelpBotResponse(text) {
+    const t = text.toLowerCase();
+
+    // ---- Greetings ----
+    if (/^(hi|hello|hey|salaam|marhaba|سلام|مرحبا)/.test(t)) {
+        return `Hello! 👋 I'm your Smart Vision CRM Helper. You can ask me anything about:<br><br>
+        • <b>Adding leads</b><br>
+        • <b>Excel export</b><br>
+        • <b>WhatsApp autopilot</b><br>
+        • <b>Broadcasting campaigns</b><br>
+        • <b>Reports & dashboard</b><br><br>
+        What would you like to know?`;
+    }
+
+    // ---- Dashboard ----
+    if (t.includes('dashboard') || t.includes('overview') || t.includes('kpi') || t.includes('report')) {
+        return `📊 <b>Dashboard & Reports</b><br><br>
+        The <b>Dashboard</b> is the first page you see. It has 4 sub-tabs:<br>
+        • <b>Overview Dashboard</b> – KPI cards, revenue chart, live event feed<br>
+        • <b>Marketing & Leads</b> – Campaign delivery, lead funnel<br>
+        • <b>Financial Reports</b> – Invoices & expense claims<br>
+        • <b>Operations & HR</b> – Inventory stock, payroll summaries<br><br>
+        Click the sub-tab buttons at the top of the Dashboard to switch views.`;
+    }
+
+    // ---- Add Lead ----
+    if (t.includes('add lead') || t.includes('new lead') || t.includes('create lead') || t.includes('add customer')) {
+        return `➕ <b>Adding a New Lead</b><br><br>
+        1. Click <b>"Sales Pipeline"</b> in the left sidebar<br>
+        2. Click the blue <b>"Add New Lead"</b> button (top right)<br>
+        3. Fill in the customer name, phone, email, stage, and notes<br>
+        4. Click <b>"Save Lead"</b><br><br>
+        The lead will appear as a card in the Kanban board under the selected stage.`;
+    }
+
+    // ---- Kanban / Pipeline ----
+    if (t.includes('pipeline') || t.includes('kanban') || t.includes('stage') || t.includes('deal') || t.includes('lead')) {
+        return `🗂️ <b>Sales Pipeline (Kanban)</b><br><br>
+        The pipeline shows leads as cards across 5 stages:<br>
+        <b>New → Contacted → AI Qualified → Proposal Sent → Won/Closed</b><br><br>
+        • Click any card to view full lead details<br>
+        • Use <b>"Add New Lead"</b> to create a new card<br>
+        • Hot leads show a 🔥 red badge, Warm leads show amber`;
+    }
+
+    // ---- Excel Export ----
+    if (t.includes('excel') || t.includes('export') || t.includes('download') || t.includes('csv')) {
+        return `📥 <b>Excel Export</b><br><br>
+        To export your CRM database to Excel:<br>
+        1. Click <b>"Excel Database"</b> in the left sidebar<br>
+        2. Click the <b>"Export to Excel"</b> button (action buttons row)<br>
+        3. A <b>.csv file</b> will download automatically, ready to open in Microsoft Excel<br><br>
+        ✅ The file includes UTF-8 BOM encoding so Arabic names display correctly.`;
+    }
+
+    // ---- Import Google Sheets ----
+    if (t.includes('import') || t.includes('google sheet') || t.includes('google drive') || t.includes('sync')) {
+        return `☁️ <b>Google Sheets Import</b><br><br>
+        To import data from Google Sheets:<br>
+        1. Click <b>"Excel Database"</b> in the sidebar<br>
+        2. Click the <b>"Import Google Sheets"</b> button<br>
+        3. The system will fetch the latest rows from your connected Google Sheet and merge them into the local database<br><br>
+        📌 The Google Sheet is connected to:<br><code>smartvision7862</code> spreadsheet via Apps Script webhook.`;
+    }
+
+    // ---- WhatsApp / Chat ----
+    if (t.includes('whatsapp') || t.includes('chat') || t.includes('message') || t.includes('inbox')) {
+        return `💬 <b>WhatsApp & Chat</b><br><br>
+        Click <b>"WhatsApp & Chat"</b> in the sidebar to access:<br>
+        • <b>Chat Inbox</b> – All incoming WhatsApp conversations<br>
+        • <b>Broadcasts & Campaigns</b> – Send bulk messages to contacts<br>
+        • <b>Message Templates</b> – Pre-written response templates<br><br>
+        Select a contact on the left to view and reply to their messages.`;
+    }
+
+    // ---- Autopilot ----
+    if (t.includes('autopilot') || t.includes('auto reply') || t.includes('automatic') || t.includes('ai reply') || t.includes('bot reply')) {
+        return `🤖 <b>AI Autopilot</b><br><br>
+        Autopilot automatically replies to incoming WhatsApp messages:<br>
+        1. Open a chat in <b>WhatsApp & Chat → Chat Inbox</b><br>
+        2. Toggle the <b>"Autopilot"</b> switch in the top-right of the chat window<br>
+        3. When a message arrives, the AI will generate a reply and send it automatically<br><br>
+        The bot handles: greetings, price enquiries, bookings, CCTV, MEP, fire alarm questions, and <b>Arabic messages</b> too! 🇶🇦`;
+    }
+
+    // ---- Broadcast ----
+    if (t.includes('broadcast') || t.includes('campaign') || t.includes('bulk') || t.includes('blast')) {
+        return `📣 <b>Broadcast Campaigns</b><br><br>
+        To send a bulk WhatsApp broadcast:<br>
+        1. Go to <b>WhatsApp & Chat → Broadcasts & Campaigns</b><br>
+        2. Enter a <b>campaign name</b><br>
+        3. Select a <b>target audience</b> (All leads, Hot leads, etc.)<br>
+        4. Select a <b>message template</b><br>
+        5. Click <b>"🚀 Launch Broadcast"</b><br><br>
+        Results appear in the Campaign Performance Report on the right.`;
+    }
+
+    // ---- Customers ----
+    if (t.includes('customer') || t.includes('contact') || t.includes('directory') || t.includes('crm')) {
+        return `👥 <b>Customers & Directory</b><br><br>
+        Click <b>"Customers & Directory"</b> to see all your contacts:<br>
+        • View full customer profiles with history<br>
+        • See their lead score, temperature, and status<br>
+        • Search/filter by name, phone, or company<br>
+        • Click any row to edit a customer's details`;
+    }
+
+    // ---- Invoices / Sales ----
+    if (t.includes('invoice') || t.includes('sale') || t.includes('payment') || t.includes('billing') || t.includes('quotation') || t.includes('quote')) {
+        return `💰 <b>Sales & Invoices</b><br><br>
+        Click <b>"Sales & Invoices"</b> in the sidebar to:<br>
+        • Create and manage invoices (QR currency supported)<br>
+        • Track payment status (Paid, Pending, Overdue)<br>
+        • Generate PDF quotations for customers<br>
+        • View revenue history per client`;
+    }
+
+    // ---- Projects / Tasks ----
+    if (t.includes('project') || t.includes('task') || t.includes('todo') || t.includes('deadline') || t.includes('assign')) {
+        return `📋 <b>Projects & Tasks</b><br><br>
+        Click <b>"Projects & Tasks"</b> to:<br>
+        • Create and assign tasks to team members<br>
+        • Set deadlines and priorities<br>
+        • Track project milestones<br>
+        • Mark tasks as complete or in-progress`;
+    }
+
+    // ---- Settings ----
+    if (t.includes('setting') || t.includes('setup') || t.includes('configure') || t.includes('api') || t.includes('webhook')) {
+        return `⚙️ <b>Settings & Setup</b><br><br>
+        Click <b>"Settings & Setup"</b> to configure:<br>
+        • WhatsApp API connection (phone number, QR scan)<br>
+        • Google Sheets integration URL<br>
+        • Business profile (name, address, logo)<br>
+        • AI Autopilot preferences<br>
+        • Notification and alert rules`;
+    }
+
+    // ---- Loyalty ----
+    if (t.includes('loyalty') || t.includes('reward') || t.includes('point') || t.includes('tier')) {
+        return `⭐ <b>Loyalty & Rewards</b><br><br>
+        Click <b>"Loyalty & Rewards"</b> to manage customer loyalty:<br>
+        • View customer tier status (Bronze, Silver, Gold, Platinum)<br>
+        • Award bonus points for completed deals<br>
+        • Track point balances and redemptions<br>
+        • Set up automated tier upgrade notifications`;
+    }
+
+    // ---- Arabic ----
+    if (/[\u0600-\u06FF]/.test(t) || t.includes('arabic') || t.includes('عربي')) {
+        return `🇶🇦 <b>دعم اللغة العربية</b><br><br>
+        نعم! هذا النظام يدعم اللغة العربية بالكامل.<br><br>
+        • الردود التلقائية (Autopilot) تعمل باللغة العربية<br>
+        • أسماء العملاء العربية مدعومة في قاعدة البيانات<br>
+        • تصدير Excel يدعم ترميز UTF-8 للأحرف العربية<br><br>
+        كيف يمكنني مساعدتك؟`;
+    }
+
+    // ---- Help / what can you do ----
+    if (t.includes('help') || t.includes('what can') || t.includes('guide') || t.includes('manual') || t.includes('how')) {
+        return `🛠️ <b>I can help you with:</b><br><br>
+        • Adding leads & managing the pipeline<br>
+        • WhatsApp chat & AI autopilot<br>
+        • Broadcasting campaigns<br>
+        • Exporting/importing data (Excel, Google Sheets)<br>
+        • Invoices, Projects, Customers<br>
+        • Dashboard reports & KPIs<br>
+        • Settings & configuration<br><br>
+        Just ask a question in plain English or Arabic! 🇶🇦`;
+    }
+
+    // ---- Fallback ----
+    return `🤔 I'm not sure about that specific topic. Here are some things you can ask me:<br><br>
+    • "How do I add a lead?"<br>
+    • "Where is the excel export?"<br>
+    • "How does autopilot work?"<br>
+    • "How do I send a broadcast?"<br>
+    • "How do I create an invoice?"<br><br>
+    You can also visit the <b>User Manual & Guide</b> in the sidebar for detailed documentation.`;
+}
