@@ -9,8 +9,13 @@ const _isLocalOrigin = window.location.hostname === 'localhost' ||
                        window.location.hostname === '127.0.0.1' || 
                        window.location.hostname.startsWith('192.168.');
 
-if (!BACKEND_URL) {
-    if (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:') || !_isLocalOrigin) {
+if (_isLocalOrigin) {
+    // When accessing directly on local network/localhost, override any stored localtunnel URL to use direct origin
+    if (!BACKEND_URL || BACKEND_URL.includes('.loca.lt')) {
+        BACKEND_URL = window.location.origin;
+    }
+} else if (!BACKEND_URL) {
+    if (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:')) {
         // Running from GitHub Pages — use the live tunnel backend from config.json
         BACKEND_URL = 'https://smartvision-crm.loca.lt'; // default until config.json loads
     } else {
