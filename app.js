@@ -5,16 +5,30 @@ let activeOpTab = 'tasks';
 let activeCustomerId = 1;
 
 let BACKEND_URL = localStorage.getItem("settings-backend-url");
+const _isLocalOrigin = window.location.hostname === 'localhost' || 
+                       window.location.hostname === '127.0.0.1' || 
+                       window.location.hostname.startsWith('192.168.');
+
 if (!BACKEND_URL) {
-    const isLocalOrigin = window.location.hostname === 'localhost' || 
-                          window.location.hostname === '127.0.0.1' || 
-                          window.location.hostname.startsWith('192.168.');
-    if (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:') || !isLocalOrigin) {
-        // Running from GitHub Pages or a static host — use the public tunnel backend
-        BACKEND_URL = 'https://smartvision-crm.loca.lt';
+    if (!window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file:') || !_isLocalOrigin) {
+        // Running from GitHub Pages — use the live tunnel backend from config.json
+        BACKEND_URL = 'https://smartvision-crm.loca.lt'; // default until config.json loads
     } else {
         BACKEND_URL = window.location.origin;
     }
+}
+
+// Auto-load the latest backend URL from config.json (updated every server start)
+if (!_isLocalOrigin) {
+    fetch('/crm/config.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(cfg => {
+            if (cfg && cfg.backendUrl && !localStorage.getItem("settings-backend-url")) {
+                BACKEND_URL = cfg.backendUrl;
+                console.log('[CRM] Backend URL loaded from config.json:', BACKEND_URL);
+            }
+        })
+        .catch(() => {}); // silently fall back to default
 }
 let isBackendConnected = false;
 let seenMessageIds = new Set(); // Track by ID to survive server restarts
