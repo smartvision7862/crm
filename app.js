@@ -30,6 +30,24 @@ if (!_isLocalOrigin) {
         })
         .catch(() => {}); // silently fall back to default
 }
+// Global fetch interceptor to inject localtunnel bypass header automatically
+const originalFetch = window.fetch;
+window.fetch = async function(resource, options) {
+    if (typeof resource === 'string' && resource.includes('loca.lt')) {
+        options = options || {};
+        options.headers = options.headers || {};
+        if (options.headers instanceof Headers) {
+            options.headers.set('bypass-tunnel-reminder', 'true');
+        } else if (Array.isArray(options.headers)) {
+            const hasIt = options.headers.some(h => h[0].toLowerCase() === 'bypass-tunnel-reminder');
+            if (!hasIt) options.headers.push(['bypass-tunnel-reminder', 'true']);
+        } else {
+            options.headers['bypass-tunnel-reminder'] = 'true';
+        }
+    }
+    return originalFetch(resource, options);
+};
+
 let isBackendConnected = false;
 let seenMessageIds = new Set(); // Track by ID to survive server restarts
 let isAppInitialized = false;
