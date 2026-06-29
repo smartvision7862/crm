@@ -7237,3 +7237,83 @@ function generateHelpBotResponse(text) {
     • "How do I create an invoice?"<br><br>
     You can also visit the <b>User Manual & Guide</b> in the sidebar for detailed documentation.`;
 }
+
+// ==========================================================================
+// Help Bot — Voice Input (Web Speech API)
+// ==========================================================================
+
+let helpBotRecognition = null;
+let helpBotListening = false;
+
+function startHelpBotVoice() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const micBtn = document.getElementById('help-bot-mic');
+    const input  = document.getElementById('help-bot-input');
+
+    if (!SpeechRecognition) {
+        // Browser doesn't support speech
+        const container = document.getElementById('help-bot-messages');
+        const errMsg = document.createElement('div');
+        errMsg.className = 'help-msg bot';
+        errMsg.innerHTML = `<div class="msg-bubble">⚠️ Voice input is not supported in this browser. Please try <b>Google Chrome</b> or <b>Microsoft Edge</b>, then click the 🎤 mic button again.</div>`;
+        if (container) { container.appendChild(errMsg); container.scrollTop = container.scrollHeight; }
+        return;
+    }
+
+    // If already listening, stop it
+    if (helpBotListening && helpBotRecognition) {
+        helpBotRecognition.stop();
+        return;
+    }
+
+    helpBotRecognition = new SpeechRecognition();
+    helpBotRecognition.lang = 'en-US';
+    helpBotRecognition.interimResults = true;
+    helpBotRecognition.maxAlternatives = 1;
+    helpBotRecognition.continuous = false;
+
+    helpBotRecognition.onstart = () => {
+        helpBotListening = true;
+        if (micBtn) micBtn.classList.add('listening');
+        if (input)  input.placeholder = '🎤 Listening...';
+    };
+
+    helpBotRecognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        if (input) input.value = transcript;
+
+        // If final result, auto-send
+        if (event.results[event.results.length - 1].isFinal) {
+            setTimeout(() => sendHelpBotMessage(), 300);
+        }
+    };
+
+    helpBotRecognition.onerror = (event) => {
+        console.warn('Help Bot voice error:', event.error);
+        resetMicState();
+        if (event.error === 'not-allowed') {
+            const container = document.getElementById('help-bot-messages');
+            const errMsg = document.createElement('div');
+            errMsg.className = 'help-msg bot';
+            errMsg.innerHTML = `<div class="msg-bubble">🔒 Microphone access was denied. Please allow microphone permission in your browser settings and try again.</div>`;
+            if (container) { container.appendChild(errMsg); container.scrollTop = container.scrollHeight; }
+        }
+    };
+
+    helpBotRecognition.onend = () => {
+        resetMicState();
+    };
+
+    helpBotRecognition.start();
+}
+
+function resetMicState() {
+    helpBotListening = false;
+    const micBtn = document.getElementById('help-bot-mic');
+    const input  = document.getElementById('help-bot-input');
+    if (micBtn) micBtn.classList.remove('listening');
+    if (input && input.value === '') input.placeholder = 'Type or 🎤 speak your question...';
+}
