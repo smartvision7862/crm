@@ -3174,17 +3174,31 @@
 
     <!-- Help Chatbot Widget FAB -->
     <div id="help-bot-fab" onclick="toggleHelpBot()" title="Smart Vision Help Bot">
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Chat bubble body -->
-            <path d="M6 10C6 7.79 7.79 6 10 6H38C40.21 6 42 7.79 42 10V30C42 32.21 40.21 34 38 34H26L18 42V34H10C7.79 34 6 32.21 6 30V10Z" fill="white" fill-opacity="0.18" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
-            <!-- Left eye / dot -->
-            <circle cx="17" cy="20" r="3" fill="white"/>
-            <!-- Right eye / dot -->
-            <circle cx="31" cy="20" r="3" fill="white"/>
-            <!-- Smile -->
-            <path d="M15 26.5 Q24 32 33 26.5" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-            <!-- Sparkle top-right -->
-            <path d="M40 5 L41.2 7.8 L44 9 L41.2 10.2 L40 13 L38.8 10.2 L36 9 L38.8 7.8 Z" fill="#e879f9" opacity="0.95"/>
+        <!-- Shimmer ring -->
+        <div class="fab-glow-ring"></div>
+        <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="fab-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.25)"/>
+                </filter>
+                <linearGradient id="fab-bubble-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.28)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0.08)"/>
+                </linearGradient>
+            </defs>
+            <!-- Main chat bubble -->
+            <path d="M8 12C8 9.24 10.24 7 13 7H43C45.76 7 48 9.24 48 12V33C48 35.76 45.76 38 43 38H30L21 47V38H13C10.24 38 8 35.76 8 33V12Z"
+                  fill="url(#fab-bubble-fill)" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linejoin="round" filter="url(#fab-shadow)"/>
+            <!-- Three dots inside bubble -->
+            <circle cx="21" cy="22.5" r="3.2" fill="white"/>
+            <circle cx="28" cy="22.5" r="3.2" fill="white" opacity="0.75"/>
+            <circle cx="35" cy="22.5" r="3.2" fill="white" opacity="0.5"/>
+            <!-- Sparkle / 4-point star top-right -->
+            <path d="M45 5 L46.4 8.6 L50 10 L46.4 11.4 L45 15 L43.6 11.4 L40 10 L43.6 8.6 Z"
+                  fill="#fde68a" stroke="#f59e0b" stroke-width="0.5" stroke-linejoin="round"/>
+            <!-- Small secondary sparkle -->
+            <path d="M9 6 L9.8 8 L12 8.8 L9.8 9.6 L9 11.6 L8.2 9.6 L6 8.8 L8.2 8 Z"
+                  fill="rgba(255,255,255,0.7)"/>
         </svg>
     </div>
 
