@@ -2550,10 +2550,10 @@ input:checked + .slider:before {
 
 #help-bot-fab {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
+    top: 90px;
+    right: 24px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     gap: 6px;
     cursor: pointer;
@@ -2590,7 +2590,7 @@ input:checked + .slider:before {
 }
 
 #help-bot-fab:hover .help-bot-fab-inner {
-    transform: scale(1.1) translateY(-3px);
+    transform: scale(1.1) translateY(3px);
     box-shadow: 0 12px 32px rgba(99, 102, 241, 0.7), 0 4px 12px rgba(0,0,0,0.3);
 }
 
@@ -2615,13 +2615,13 @@ input:checked + .slider:before {
 
 @keyframes labelBounce {
     0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-3px); }
+    50%       { transform: translateY(3px); }
 }
 
 #help-bot-window {
     position: fixed;
-    bottom: 130px;
-    right: 28px;
+    top: 180px;
+    right: 24px;
     width: 360px;
     height: 460px;
     background: rgba(12, 20, 40, 0.97);
@@ -2633,13 +2633,13 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: slideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transform-origin: bottom right;
+    animation: slideDown 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform-origin: top right;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: scale(0.8) translateY(20px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+@keyframes slideDown {
+    from { opacity: 0; transform: scale(0.85) translateY(-20px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
 }
 
 .help-bot-header {
